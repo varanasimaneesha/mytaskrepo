@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoBus - Bus Ticket Booking</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #5b2cff, #8e44ff);
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ffd43b;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-btn {
+            background: white;
+            color: #5b2cff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 480px;
+            background:
+                linear-gradient(rgba(42, 16, 100, 0.75), rgba(42, 16, 100, 0.75)),
+                url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .hero-content {
+            width: 100%;
+            max-width: 1100px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero-content p {
+            font-size: 19px;
+            margin-bottom: 35px;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #6c35ff;
+        }
+
+        .search-btn {
+            align-self: end;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #ff5a36;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #e74727;
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        .section {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #777;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+        }
+
+        .feature-icon {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Routes */
+        .routes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .route-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            transition: 0.3s;
+        }
+
+        .route-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .route-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .route-content {
+            padding: 20px;
+        }
+
+        .route-content h3 {
+            margin-bottom: 8px;
+        }
+
+        .route-content p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .route-btn {
+            border: none;
+            background: #eee8ff;
+            color: #5b2cff;
+            padding: 9px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Bus List */
+        .bus-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bus-card {
+            background: white;
+            border-radius: 15px;
+            padding: 22px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .bus-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .bus-type {
+            color: #777;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .time {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff5a36;
+        }
+
+        .book-btn {
+            background: #5b2cff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .book-btn:hover {
+            background: #4520d1;
+        }
+
+        /* Footer */
+        footer {
+            background: #19142b;
+            color: white;
+            padding: 45px 7%;
+            margin-top: 70px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 30px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        footer h3 {
+            margin-bottom: 15px;
+        }
+
+        footer p,
+        footer a {
+            color: #bbb;
+            text-decoration: none;
+            line-height: 2;
+        }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid #333;
+            margin-top: 30px;
+            padding-top: 20px;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 850px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .search-box {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .routes {
+                grid-template-columns: 1fr;
+            }
+
+            .bus-card {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .search-box,
+            .features,
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 30px;
+            }
+
+            .bus-card {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Go<span>Bus</span></div>
+
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#routes">Routes</a></li>
+            <li><a href="#buses">Buses</a></li>
+            <li><a href="#offers">Offers</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <button class="login-btn" onclick="login()">Login</button>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+
+            <h1>Travel Easy. Travel Smart.</h1>
+            <p>Book your bus tickets quickly and enjoy a comfortable journey.</p>
+
+            <!-- Search -->
+            <div class="search-box">
+
+                <div class="input-group">
+                    <label>FROM</label>
+                    <input type="text" id="from" placeholder="Enter departure city">
+                </div>
+
+                <div class="input-group">
+                    <label>TO</label>
+                    <input type="text" id="to" placeholder="Enter destination">
+                </div>
+
+                <div class="input-group">
+                    <label>TRAVEL DATE</label>
+                    <input type="date" id="travelDate">
+                </div>
+
+                <button class="search-btn" onclick="searchBuses()">
+                    🔍 Search Buses
+                </button>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Features -->
+    <section class="section">
+        <div class="section-title">
+            <h2>Why Choose GoBus?</h2>
+            <p>Everything you need for a smooth journey</p>
+        </div>
+
+        <div class="features">
+
+            <div class="feature-card">
+                <div class="feature-icon">🚌</div>
+                <h3>Wide Selection</h3>
+                <p>Choose from hundreds of buses and routes.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>Secure Payment</h3>
+                <p>Safe and secure online payment options.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎫</div>
+                <h3>Instant Ticket</h3>
+                <p>Get your booking confirmation instantly.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📞</div>
+                <h3>24/7 Support</h3>
+                <p>Our support team is always ready to help.</p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Popular Routes -->
+    <section class="section" id="routes">
+
+        <div class="section-title">
+            <h2>Popular Routes</h2>
+            <p>Explore popular destinations</p>
+        </div>
+
+        <div class="routes">
+
+            <div class="route-card">
+                <div class="route-image"
+                     style="background-image:url('https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=800&q=80');">
+                </div>
+
+                <div class="route-content">
+                    <h3>Hyderabad → Bengaluru</h3>
+                    <p>Starting from ₹599</p>
+                    <button class="route-btn"
+                            onclick="selectRoute('Hyderabad','Bengaluru')">
+                        View Buses
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="route-card">
+                <div class="route-image"
+                     style="background-image:url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80');">
+                </div>
+
+                <div class="route-content">
+                    <h3>Chennai → Hyderabad</h3>
+                    <p>Starting from ₹699</p>
+                    <button class="route-btn"
+                            onclick="selectRoute('Chennai','Hyderabad')">
+                        View Buses
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="route-card">
+                <div class="route-image"
+                     style="background-image:url('https://images.unsplash.com/photo-1506461883276-594a12b11cf3?auto=format&fit=crop&w=800&q=80');">
+                </div>
+
+                <div class="route-content">
+                    <h3>Vijayawada → Hyderabad</h3>
+                    <p>Starting from ₹499</p>
+                    <button class="route-btn"
+                            onclick="selectRoute('Vijayawada','Hyderabad')">
+                        View Buses
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Bus List -->
+    <section class="section" id="buses">
+
+        <div class="section-title">
+            <h2>Available Buses</h2>
+            <p>Choose your preferred bus</p>
+        </div>
+
+        <div class="bus-list">
+
+            <div class="bus-card">
+
+                <div>
+                    <div class="bus-name">Orange Travels</div>
+                    <div class="bus-type">AC Sleeper • Volvo</div>
+                </div>
+
+                <div>
+                    <div class="time">09:30 PM</div>
+                    <small>Hyderabad</small>
+                </div>
+
+                <div>
+                    <div class="time">06:30 AM</div>
+                    <small>Bengaluru</small>
+                </div>
+
+                <div>
+                    <div class="price">₹899</div>
+                    <small>per seat</small>
+                </div>
+
+                <button class="book-btn" onclick="bookTicket('Orange Travels',899)">
+                    Book Now
+                </button>
+
+            </div>
+
+
+            <div class="bus-card">
+
+                <div>
+                    <div class="bus-name">IntrCity SmartBus</div>
+                    <div class="bus-type">AC Sleeper • Premium</div>
+                </div>
+
+                <div>
+                    <div class="time">10:00 PM</div>
+                    <small>Hyderabad</small>
+                </div>
+
+                <div>
+                    <div class="time">07:00 AM</div>
+                    <small>Bengaluru</small>
+                </div>
+
+                <div>
+                    <div class="price">₹999</div>
+                    <small>per seat</small>
+                </div>
+
+                <button class="book-btn" onclick="bookTicket('IntrCity SmartBus',999)">
+                    Book Now
+                </button>
+
+            </div>
+
+
+            <div class="bus-card">
+
+                <div>
+                    <div class="bus-name">SRS Travels</div>
+                    <div class="bus-type">AC Seater • Volvo</div>
+                </div>
+
+                <div>
+                    <div class="time">08:45 PM</div>
+                    <small>Hyderabad</small>
+                </div>
+
+                <div>
+                    <div class="time">06:15 AM</div>
+                    <small>Bengaluru</small>
+                </div>
+
+                <div>
+                    <div class="price">₹799</div>
+                    <small>per seat</small>
+                </div>
+
+                <button class="book-btn" onclick="bookTicket('SRS Travels',799)">
+                    Book Now
+                </button>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer id="contact">
+
+        <div class="footer-content">
+
+            <div>
+                <h3>GoBus</h3>
+                <p>
+                    Your trusted platform for simple,
+                    secure and comfortable bus ticket booking.
+                </p>
+            </div>
+
+            <div>
+                <h3>Company</h3>
+                <p><a href="#">About Us</a></p>
+                <p><a href="#">Careers</a></p>
+                <p><a href="#">Contact</a></p>
+            </div>
+
+            <div>
+                <h3>Support</h3>
+                <p><a href="#">Help Center</a></p>
+                <p><a href="#">Cancellation</a></p>
+                <p><a href="#">Refund Policy</a></p>
+            </div>
+
+            <div>
+                <h3>Follow Us</h3>
+                <p>Facebook</p>
+                <p>Instagram</p>
+                <p>Twitter</p>
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            © 2026 GoBus. All Rights Reserved.
+        </div>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script>
+
+        function searchBuses() {
+
+            const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+            const date = document.getElementById("travelDate").value;
+
+            if (from === "" || to === "" || date === "") {
+                alert("Please enter From, To and Travel Date.");
+                return;
+            }
+
+            alert(
+                "Searching buses from " +
+                from +
+                " to " +
+                to +
+                " on " +
+                date
+            );
+
+            document.getElementById("buses").scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+
+        function selectRoute(from, to) {
+
+            document.getElementById("from").value = from;
+            document.getElementById("to").value = to;
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+
+        function bookTicket(busName, price) {
+
+            const seats = prompt(
+                "How many seats would you like to book?"
+            );
+
+            if (seats === null || seats === "") {
+                return;
+            }
+
+            const total = price * Number(seats);
+
+            alert(
+                "Bus: " + busName +
+                "\nSeats: " + seats +
+                "\nTotal Amount: ₹" + total +
+                "\n\nBooking initiated successfully!"
+            );
+        }
+
+
+        function login() {
+            const email = prompt("Enter your email:");
+
+            if (email) {
+                alert("Login request received for " + email);
+            }
+        }
+
+    </script>
+
+</body>
+</html>
+```
+
